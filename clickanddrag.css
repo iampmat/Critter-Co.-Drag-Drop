@@ -1,0 +1,165 @@
+/* Add some margin to the page and set a default font and colour */
+ 
+body {
+  font-family: "Georgia", serif;
+  line-height: 3em;
+  color: #333;
+}
+ 
+/* Give headings their own font */
+ 
+h1, h2, h3, h4 {
+  font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+}
+ 
+/* Main content area */
+ 
+#content {
+  text-align: center;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+/* Individually coloured cards */
+ 
+#card1.correct { background: green; }
+#card2.correct { background: green; }
+#card3.correct { background: orange; }
+#card4.correct { background: yellow; }
+#card5.correct { background: green; }
+#card6.correct { background: green; }
+ 
+/* Slots for final card positions */
+ 
+#tileSlots {
+  margin: 50px auto 0 auto;
+  background: #81EA81;
+}
+ 
+/* The initial pile of unsorted cards */
+ 
+#tilePile {
+  margin: 0 auto;
+  background: #ffd;
+  width: 702px;
+  height: 117px;   
+}
+
+#tileSlots {
+  width: 351px;
+  height: 234px;
+}
+ 
+/* Individual cards and slots */
+ 
+
+#card1 {
+  float: left;
+  width: 11px;
+  height: 11px;
+  border-bottom: 53px solid;
+  border-bottom-color: orange;
+  border-top: 53px solid;
+  border-top-color: indigo;
+  border-left: 53px solid;
+  border-left-color: indigo;
+  border-right: 53px solid;
+  border-right-color: orange;
+}
+
+#card2 {
+  float: left;
+  width: 11px;
+  height: 11px;
+  border-bottom: 53px solid orange;
+  border-top: 53px solid indigo;
+  border-left: 53px solid indigo;
+  border-right: 53px solid indigo;
+}
+
+#card3 {
+  float: left;
+  width: 11px;
+  height: 11px;
+  border-bottom: 53px solid orange;
+  border-top: 53px solid orange;
+  border-left: 53px solid orange;
+  border-right: 53px solid indigo;
+}
+
+#card4 {
+  float: left;
+  width: 11px;
+  height: 11px;
+  border-bottom: 53px solid indigo;
+  border-top: 53px solid indigo;
+  border-left: 53px solid orange;
+  border-right: 53px solid orange;
+}
+
+#card5 {
+  float: left;
+  width: 11px;
+  height: 11px;
+  border-bottom: 53px solid orange;
+  border-top: 53px solid orange;
+  border-left: 53px solid orange;
+  border-right: 53px solid orange;
+}
+
+#card6 {
+  float: left;
+  width: 11px;
+  height: 11px;
+  border-bottom: 53px solid indigo;
+  border-top: 53px solid indigo;
+  border-left: 53px solid indigo;
+  border-right: 53px solid indigo;
+}
+
+#tileSlots div {
+  float: left;
+  width: 117px;
+  height: 117px;
+  
+}
+ 
+#tileSlots div:first-child, #tilePile div:first-child {
+  margin-left: 0;
+}
+ 
+#tileSlots div.hovered {
+  background: #aaa;
+}
+
+
+#tilePile div {
+  background: #666;
+  color: #fff;
+  font-size: 20px;
+  text-shadow: 0 0 3px #000;
+}
+ 
+#tilePile div.ui-draggable-dragging {
+  -moz-box-shadow: 0 0 .5em rgba(0, 0, 0, .8);
+  -webkit-box-shadow: 0 0 .5em rgba(0, 0, 0, .8);
+  box-shadow: 0 0 .5em rgba(0, 0, 0, .8);
+}
+
+.box_rotate_90 {
+  -webkit-transform: rotate(90deg);
+
+} 
+.box_rotate_180 {
+  -webkit-transform: rotate(180deg);
+
+} 
+.box_rotate_270 {
+  -webkit-transform: rotate(270deg);
+
+} 
+.original_box_rotate {
+  -webkit-transform: rotate(360deg);
+
+}
