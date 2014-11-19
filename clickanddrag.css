@@ -1,15 +1,7 @@
-/* Add some margin to the page and set a default font and colour */
- 
 body {
-  font-family: "Georgia", serif;
-  line-height: 3em;
-  color: #333;
 }
  
-/* Give headings their own font */
- 
 h1, h2, h3, h4 {
-  font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
 }
  
 /* Main content area */
@@ -20,30 +12,28 @@ h1, h2, h3, h4 {
   -webkit-user-select: none;
   user-select: none;
 }
-
-/* Individually coloured cards */
- 
-#card1.correct { background: green; }
-#card2.correct { background: green; }
-#card3.correct { background: orange; }
-#card4.correct { background: yellow; }
-#card5.correct { background: green; }
-#card6.correct { background: green; }
  
 /* Slots for final card positions */
  
 #tileSlots {
-  margin: 50px auto 0 auto;
+  margin: 50px;
   background: #81EA81;
 }
  
 /* The initial pile of unsorted cards */
  
 #tilePile {
-  margin: 0 auto;
-  background: #ffd;
+  /*margin: 0 auto;*/
   width: 702px;
-  height: 117px;   
+  height: 117px;  
+  position: relative; 
+}
+
+#queuePile {
+  margin: 0 auto;
+  width: 702px;
+  height: 117px;
+  position: absolute;
 }
 
 #tileSlots {
@@ -124,17 +114,23 @@ h1, h2, h3, h4 {
   height: 117px;
   
 }
+
+#queuePile div {
+  float: left;
+  width: 117px;
+  height: 117px;
+}
  
-#tileSlots div:first-child, #tilePile div:first-child {
+#tileSlots div:first-child {
   margin-left: 0;
 }
  
-#tileSlots div.hovered {
+#tileSlots div.hovered, #queuePile div.hovered {
   background: #aaa;
 }
 
 
-#tilePile div {
+#queuePile div {
   background: #666;
   color: #fff;
   font-size: 20px;

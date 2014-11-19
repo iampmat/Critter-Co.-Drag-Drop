@@ -6,7 +6,14 @@ var temp;
 $( init );
 
 function init() {
-
+  // Create Queue
+  for ( var i=0; i<6; i++ ) {
+    $('<div>' + 'q' + [i] + '</div>').attr( 'id', 'queue'+numbers[i] ).appendTo( '#queuePile' ).droppable( {
+        accept: '#tilePile div',
+        hoverClass: 'hovered',
+        drop: handleTileDrop,
+    } );
+  }
   // Create the pile of tiles
   for ( var i=0; i<6; i++ ) {
     $('<div>' + numbers[i] + '</div>').data( 'number', numbers[i] ).attr( 'id', 'card'+numbers[i] ).appendTo( '#tilePile' ).draggable( {
@@ -95,7 +102,8 @@ function init() {
 
   // Card rotation
   $('#card1').click(function(){
-    if($('#card1').data('click')==true){
+    console.log($('#card1').data('click'));
+    if($('#card1').data('click') == true){
       if($(this).is('.box_rotate_90')){
         $(this).removeClass('box_rotate_90');
         $(this).addClass('box_rotate_180');
@@ -136,7 +144,7 @@ function init() {
 });
 
 $('#card2').click(function(){
-  if($('#card2').data('click')==true){
+  if($('#card2').data('click') == true){
     if($(this).is('.box_rotate_90')){
       $(this).removeClass('box_rotate_90');
       $(this).addClass('box_rotate_180');
@@ -176,7 +184,7 @@ $('#card2').click(function(){
 });
 
 $('#card3').click(function(){
-  if($('#card3').data('click')==true){
+  if($('#card3').data('click') == true){
     if($(this).is('.box_rotate_90')){
       $(this).removeClass('box_rotate_90');
       $(this).addClass('box_rotate_180');
@@ -217,7 +225,7 @@ $('#card3').click(function(){
 });
 
 $('#card4').click(function(){
-  if($('#card4').data('click')==true){
+  if($('#card4').data('click') == true){
     if($(this).is('.box_rotate_90')){
       $(this).removeClass('box_rotate_90');
       $(this).addClass('box_rotate_180');
@@ -257,7 +265,7 @@ $('#card4').click(function(){
 });
 
 $('#card5').click(function(){
-  if($('#card5').data('click')==true){
+  if($('#card5').data('click') == true){
     if($(this).is('.box_rotate_90')){
       $(this).removeClass('box_rotate_90');
       $(this).addClass('box_rotate_180');
@@ -297,7 +305,7 @@ $('#card5').click(function(){
 });
 
 $('#card6').click(function(){
-  if($('#card6').data('click')==true){
+  if($('#card6').data('click') == true){
     if($(this).is('.box_rotate_90')){
       $(this).removeClass('box_rotate_90');
       $(this).addClass('box_rotate_180');
@@ -351,16 +359,7 @@ function handleTileDrop( event, ui ) {
   var xPos = offset.left;
   var yPos = offset.top;
   var id = newPiece.attr('id');
-  newPiece.draggable({
-      revert : function (event, ui) {
-        ui.draggable.position = {
-        top : 0,
-        left : 0
-        };
-        return !event;
-      }
-
-  });
+  
   
   for (var j = 0; j <= 6; j++) {
     // If a piece previously placed on the board is being dragged, reset it as a newPiece
@@ -369,62 +368,73 @@ function handleTileDrop( event, ui ) {
     }
   }  
 
-  // Check all pieces if adjacent
-  for (var j = 0; j <= 6; j++) {
+  // Check all pieces if adjacent if the peice is dropped onto the playing board
+  if($(this).attr('id') == undefined){
+    for (var j = 0; j <= 6; j++) {
 
-    // Only check piece if it's a piece
-    if(typeof listOfPieces[j] === 'object'){
+      // Only check piece if it's a piece
+      if(typeof listOfPieces[j] === 'object'){
 
-      // Check piece to the right
-      if((listOfPieces[j].xPos == xPos + pieceSize) && (listOfPieces[j].yPos == yPos)){
-        sideResult = newPiece.data( 'right' ) + listOfPieces[j].data( 'left' );
-        result += sideResult;
-        console.log('right' + newPiece.data( 'right' ));
-        console.log('left' + listOfPieces[j].data( 'left' ));
-      }
+        // Check piece to the right
+        if((listOfPieces[j].xPos == xPos + pieceSize) && (listOfPieces[j].yPos == yPos)){
+          sideResult = newPiece.data( 'right' ) + listOfPieces[j].data( 'left' );
+          result += sideResult;
+          console.log('right' + newPiece.data( 'right' ));
+          console.log('left' + listOfPieces[j].data( 'left' ));
+        }
 
-      // Check piece to the bottom
-      if((listOfPieces[j].xPos == xPos) && (listOfPieces[j].yPos == yPos - pieceSize)){
-        sideResult = newPiece.data( 'top' ) + listOfPieces[j].data( 'bottom' );
-        result += sideResult;
-        console.log('top' + newPiece.data( 'top' ));
-        console.log('bottom' + listOfPieces[j].data( 'bottom' ));
-      }
+        // Check piece to the bottom
+        if((listOfPieces[j].xPos == xPos) && (listOfPieces[j].yPos == yPos - pieceSize)){
+          sideResult = newPiece.data( 'top' ) + listOfPieces[j].data( 'bottom' );
+          result += sideResult;
+          console.log('top' + newPiece.data( 'top' ));
+          console.log('bottom' + listOfPieces[j].data( 'bottom' ));
+        }
 
-      // Check piece to the left
-      if((listOfPieces[j].xPos == xPos - pieceSize) && (listOfPieces[j].yPos == yPos)){
-        sideResult = newPiece.data( 'left' ) + listOfPieces[j].data( 'right' );
-        result += sideResult;
-        console.log('left' + newPiece.data( 'left' ));
-        console.log('right' + listOfPieces[j].data( 'right' ));
-      }
+        // Check piece to the left
+        if((listOfPieces[j].xPos == xPos - pieceSize) && (listOfPieces[j].yPos == yPos)){
+          sideResult = newPiece.data( 'left' ) + listOfPieces[j].data( 'right' );
+          result += sideResult;
+          console.log('left' + newPiece.data( 'left' ));
+          console.log('right' + listOfPieces[j].data( 'right' ));
+        }
 
-      // Check piece to the top
-      if((listOfPieces[j].xPos == xPos) && (listOfPieces[j].yPos == yPos + pieceSize)){
-        sideResult = newPiece.data( 'bottom' ) + listOfPieces[j].data( 'top' );
-        result += sideResult;
-        console.log('bottom' + newPiece.data( 'bottom' ));
-        console.log('top' + listOfPieces[j].data( 'top' ));
+        // Check piece to the top
+        if((listOfPieces[j].xPos == xPos) && (listOfPieces[j].yPos == yPos + pieceSize)){
+          sideResult = newPiece.data( 'bottom' ) + listOfPieces[j].data( 'top' );
+          result += sideResult;
+          console.log('bottom' + newPiece.data( 'bottom' ));
+          console.log('top' + listOfPieces[j].data( 'top' ));
+        }
       }
     }
-  };       
+  }
+  // Assign result -1 if the peice is being dragged into the queue.
+  else {
+    result = -1;
+  }      
   
   if(result == 0){
     newPiece.position( { of: $(this), my: 'left top', at: 'left top' } );
     ui.draggable.draggable( 'option', 'revert', 'invalid' );
-
     //ui.draggable.draggable( 'disable' );
-    
-    // Adds the new piece to the list of all dropped
     $('#' + id).data('click', false);
+    // Adds the new piece to the list of all dropped
     listOfPieces[i] = newPiece;
     listOfPieces[i].xPos = xPos;
     listOfPieces[i].yPos = yPos;
     i++;
+  }
+  else if(result == -1){
+    $('#' + id).data('click', true);
   }
   else{
     ui.draggable.draggable( 'enable' );
     $(this).droppable( 'enable' );
     ui.draggable.draggable( 'option', 'revert', true );
   }
+}
+
+function replaceDraggable(event, ui){
+  
 }
