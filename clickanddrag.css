@@ -1,9 +1,3 @@
-body {
-}
- 
-h1, h2, h3, h4 {
-}
- 
 /* Main content area */
  
 #content {
@@ -16,6 +10,8 @@ h1, h2, h3, h4 {
 /* Slots for final card positions */
  
 #tileSlots {
+  width: 351px;
+  height: 234px;
   margin: 50px;
   background: #81EA81;
 }
@@ -23,39 +19,29 @@ h1, h2, h3, h4 {
 /* The initial pile of unsorted cards */
  
 #tilePile {
-  /*margin: 0 auto;*/
   width: 702px;
   height: 117px;  
   position: relative; 
+  z-index: 1;
 }
 
 #queuePile {
-  margin: 0 auto;
+  margin: parent;
   width: 702px;
   height: 117px;
   position: absolute;
 }
-
-#tileSlots {
-  width: 351px;
-  height: 234px;
-}
  
 /* Individual cards and slots */
- 
 
 #card1 {
   float: left;
   width: 11px;
   height: 11px;
-  border-bottom: 53px solid;
-  border-bottom-color: orange;
-  border-top: 53px solid;
-  border-top-color: indigo;
-  border-left: 53px solid;
-  border-left-color: indigo;
-  border-right: 53px solid;
-  border-right-color: orange;
+  border-bottom: 53px solid orange;
+  border-top: 53px solid indigo;
+  border-left: 53px solid indigo;
+  border-right: 53px solid orange;
 }
 
 #card2 {
@@ -108,40 +94,23 @@ h1, h2, h3, h4 {
   border-right: 53px solid indigo;
 }
 
-#tileSlots div {
+#tileSlots div, #queuePile div {
   float: left;
   width: 117px;
   height: 117px;
-  
-}
-
-#queuePile div {
-  float: left;
-  width: 117px;
-  height: 117px;
-}
- 
-#tileSlots div:first-child {
-  margin-left: 0;
 }
  
 #tileSlots div.hovered, #queuePile div.hovered {
   background: #aaa;
 }
 
-
-#queuePile div {
-  background: #666;
-  color: #fff;
-  font-size: 20px;
-  text-shadow: 0 0 3px #000;
-}
- 
 #tilePile div.ui-draggable-dragging {
   -moz-box-shadow: 0 0 .5em rgba(0, 0, 0, .8);
   -webkit-box-shadow: 0 0 .5em rgba(0, 0, 0, .8);
   box-shadow: 0 0 .5em rgba(0, 0, 0, .8);
 }
+
+/* Add and remove the following classes for peice rotation*/
 
 .box_rotate_90 {
   -webkit-transform: rotate(90deg);

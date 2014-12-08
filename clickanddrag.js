@@ -1,9 +1,28 @@
 var correctPieces = 0;
 var listOfPieces = [undefined, undefined, undefined, undefined, undefined, undefined];
+var savedList = [undefined, undefined, undefined, undefined, undefined, undefined];
+
+var topValues = [-1, -1, 1, -1, 1, -1];
+var rightValues = [1, -1, -1, 1, 1, -1];
+var bottomValues = [1, 1, 1, -1, 1, -1];
+var leftValues = [-1, -1, 1, 1, 1, -1];
+var sides = [ 'top', 'right', 'bottom', 'left'];
+
 var numbers = [ 1, 2, 3, 4, 5, 6 ];
 var i = 0;
 var temp;
+var pieceSize = 117;
 $( init );
+
+function onload(){
+  if(savedList[0] != undefined){
+
+  }
+  else {
+    init();
+  }
+}
+
 
 function init() {
   // Create Queue
@@ -24,10 +43,6 @@ function init() {
     } );
   }
 
-  // Add Original Position
-  $('#card1').data('originalXPos', $('#card1').offset().left);
-  $('#card1').data('originalYPos', $('#card1').offset().top);
-
   // Create the card slots
   var words = [ 'one', 'two', 'three', 'four', 'five', 'six' ];
   for ( var i=1; i<=6; i++ ) {
@@ -39,7 +54,7 @@ function init() {
     
   }
 
-  // Creates droppable elements for each draggable to prevent stacking
+  // Creates droppable elements for each draggable to prevent stacking pieces
   for ( var i=0; i<6; i++ ){
     $('#card' + numbers[i]).droppable({
       greedy: true,
@@ -50,391 +65,160 @@ function init() {
     });
   }
 
-  // Add Clicking functionality
-  $('#card1').data('click', true);
-  $('#card2').data('click', true);
-  $('#card3').data('click', true);
-  $('#card4').data('click', true);
-  $('#card5').data('click', true);
-  $('#card6').data('click', true);
-  
-  // Card jigsawing
-  $('#card1').data( 'top', -1 );
-  $('#card1').data( 'right', 1 );
-  $('#card1').data( 'bottom', 1 );
-  $('#card1').data( 'left', -1 );
-
-  $('#card2').data( 'top', -1 );
-  $('#card2').data( 'right', -1 );
-  $('#card2').data( 'bottom', 1 );
-  $('#card2').data( 'left', -1 );
-
-  $('#card3').data( 'top', 1 );
-  $('#card3').data( 'right', -1 );
-  $('#card3').data( 'bottom', 1 );
-  $('#card3').data( 'left', 1 );
-
-  $('#card4').data( 'top', -1 );
-  $('#card4').data( 'right', 1 );
-  $('#card4').data( 'bottom', -1 );
-  $('#card4').data( 'left', 1 );
-
-  $('#card5').data( 'top', 1 );
-  $('#card5').data( 'right', 1 );
-  $('#card5').data( 'bottom', 1 );
-  $('#card5').data( 'left', 1 );
-
-  $('#card6').data( 'top', -1 );
-  $('#card6').data( 'right', -1 );
-  $('#card6').data( 'bottom', -1 );
-  $('#card6').data( 'left', -1 );
-
-  /*function onDrag (event, ui) {
-        var offset = $(this).offset();
-        var id = $(this).attr('id');
-        var xPos = offset.left;
-        var yPos = offset.top;
-        console.log(id);
-        if(yPos < 100){
-          $('#' + id).position({'top': $(this).data(originalYPos), 'left' : $(this).data(originalXPos)});
-        }
-  }*/
-
-  // Card rotation
-  $('#card1').click(function(){
-    console.log($('#card1').data('click'));
-    if($('#card1').data('click') == true){
-      if($(this).is('.box_rotate_90')){
-        $(this).removeClass('box_rotate_90');
-        $(this).addClass('box_rotate_180');
-      // rotate sides
-      temp = $('#card1').data( 'left' );
-      $('#card1').data( 'left', $('#card1').data( 'bottom' ) );
-      $('#card1').data( 'bottom', $('#card1').data( 'right' ) );
-      $('#card1').data( 'right', $('#card1').data( 'top' ) );
-      $('#card1').data( 'top', temp );
-    }
-    else if($(this).is('.box_rotate_180')){
-      $(this).removeClass('box_rotate_180');
-      $(this).addClass('box_rotate_270');
-      // rotate sides
-      temp = $('#card1').data( 'left' );
-      $('#card1').data( 'left', $('#card1').data( 'bottom' ) );
-      $('#card1').data( 'bottom', $('#card1').data( 'right' ) );
-      $('#card1').data( 'right', $('#card1').data( 'top' ) );
-      $('#card1').data( 'top', temp );
-    }
-    else if($(this).is('.box_rotate_270')){
-      $(this).removeClass('box_rotate_270');
-      $('#card1').data( 'top', -1 );
-      $('#card1').data( 'right', 1 );
-      $('#card1').data( 'bottom', 1 );
-      $('#card1').data( 'left', -1 );
-    }  
-    else{
-      $(this).addClass('box_rotate_90');
-      temp = $('#card1').data( 'left' );
-      $('#card1').data( 'left', $('#card1').data( 'bottom' ) );
-      $('#card1').data( 'bottom', $('#card1').data( 'right' ) );
-      $('#card1').data( 'right', $('#card1').data( 'top' ) );
-      $('#card1').data( 'top', temp );
-      console.log($('#card1').data( 'left'));
-    } 
+  // Adds side values to all pieces 
+  for ( var j = 0; j<6; j++ ) {
+    $('#card' + numbers[j]).data('click', true);
+    $('#card' + numbers[j]).data('top', topValues[j]);
+    $('#card' + numbers[j]).data('right', rightValues[j]);  
+    $('#card' + numbers[j]).data('bottom', bottomValues[j]);
+    $('#card' + numbers[j]).data('left', leftValues[j]);
   }
-});
 
-$('#card2').click(function(){
-  if($('#card2').data('click') == true){
-    if($(this).is('.box_rotate_90')){
-      $(this).removeClass('box_rotate_90');
-      $(this).addClass('box_rotate_180');
-      // rotate sides
-      temp = $('#card2').data( 'left' );
-      $('#card2').data( 'left', $('#card2').data( 'bottom' ) );
-      $('#card2').data( 'bottom', $('#card2').data( 'right' ) );
-      $('#card2').data( 'right', $('#card2').data( 'top' ) );
-      $('#card2').data( 'top', temp );
+  // Rotate pieces
+  $('body').click(function(e){
+    var id = '#' + e.target.id;
+    if($(id).data('click') == true){
+      if($(id).is('.box_rotate_90')){
+        $(id).removeClass('box_rotate_90');
+        $(id).addClass('box_rotate_180');
+        rotateValues(id);
+      }
+      else if($(id).is('.box_rotate_180')){
+        $(id).removeClass('box_rotate_180');
+        $(id).addClass('box_rotate_270');
+        rotateValues(id);
+      }
+      else if($(id).is('.box_rotate_270')){
+        $(id).removeClass('box_rotate_270');
+        var num = id.split("d");
+        console.log(num);
+        $('#card' + num[1]).data('top', topValues[(num[1] - 1)]);
+        $('#card' + num[1]).data('right', rightValues[(num[1] - 1)]);  
+        $('#card' + num[1]).data('bottom', bottomValues[(num[1] - 1)]);
+        $('#card' + num[1]).data('left', leftValues[(num[1] - 1)]);
+      }  
+      else{
+        $(id).addClass('box_rotate_90');
+        rotateValues(id);
+      } 
     }
-    else if($(this).is('.box_rotate_180')){
-      $(this).removeClass('box_rotate_180');
-      $(this).addClass('box_rotate_270');
-      // rotate sides
-      temp = $('#card2').data( 'left' );
-      $('#card2').data( 'left', $('#card2').data( 'bottom' ) );
-      $('#card2').data( 'bottom', $('#card2').data( 'right' ) );
-      $('#card2').data( 'right', $('#card2').data( 'top' ) );
-      $('#card2').data( 'top', temp );
-    }
-    else if($(this).is('.box_rotate_270')){
-      $(this).removeClass('box_rotate_270');
-      $('#card2').data( 'top', -1 );
-      $('#card2').data( 'right', -1 );
-      $('#card2').data( 'bottom', 1 );
-      $('#card2').data( 'left', -1 );
-    }  
-    else{
-      $(this).addClass('box_rotate_90');
-      temp = $('#card2').data( 'left' );
-      $('#card2').data( 'left', $('#card2').data( 'bottom' ) );
-      $('#card2').data( 'bottom', $('#card2').data( 'right' ) );
-      $('#card2').data( 'right', $('#card2').data( 'top' ) );
-      $('#card2').data( 'top', temp );
-    }  
-  }
-});
+  });
+}
 
-$('#card3').click(function(){
-  if($('#card3').data('click') == true){
-    if($(this).is('.box_rotate_90')){
-      $(this).removeClass('box_rotate_90');
-      $(this).addClass('box_rotate_180');
-      // rotate sides
-      temp = $('#card3').data( 'left' );
-      $('#card3').data( 'left', $('#card3').data( 'bottom' ) );
-      $('#card3').data( 'bottom', $('#card3').data( 'right' ) );
-      $('#card3').data( 'right', $('#card3').data( 'top' ) );
-      $('#card3').data( 'top', temp );
-    }
-    else if($(this).is('.box_rotate_180')){
-      $(this).removeClass('box_rotate_180');
-      $(this).addClass('box_rotate_270');
-      // rotate sides
-      temp = $('#card3').data( 'left' );
-      $('#card3').data( 'left', $('#card3').data( 'bottom' ) );
-      $('#card3').data( 'bottom', $('#card3').data( 'right' ) );
-      $('#card3').data( 'right', $('#card3').data( 'top' ) );
-      $('#card3').data( 'top', temp );
-    }
-    else if($(this).is('.box_rotate_270')){
-      $(this).removeClass('box_rotate_270');
-      $('#card3').data( 'top', 1 );
-      $('#card3').data( 'right', -1 );
-      $('#card3').data( 'bottom', 1 );
-      $('#card3').data( 'left', 1 );
-    }  
-    else{
-      $(this).addClass('box_rotate_90');
-      temp = $('#card3').data( 'left' );
-      $('#card3').data( 'left', $('#card3').data( 'bottom' ) );
-      $('#card3').data( 'bottom', $('#card3').data( 'right' ) );
-      $('#card3').data( 'right', $('#card3').data( 'top' ) );
-      $('#card3').data( 'top', temp );
-      console.log($('#card3').data( 'left'));  
-    }  
-  }
-});
-
-$('#card4').click(function(){
-  if($('#card4').data('click') == true){
-    if($(this).is('.box_rotate_90')){
-      $(this).removeClass('box_rotate_90');
-      $(this).addClass('box_rotate_180');
-      // rotate sides
-      temp = $('#card4').data( 'left' );
-      $('#card4').data( 'left', $('#card4').data( 'bottom' ) );
-      $('#card4').data( 'bottom', $('#card4').data( 'right' ) );
-      $('#card4').data( 'right', $('#card4').data( 'top' ) );
-      $('#card4').data( 'top', temp );
-    }
-    else if($(this).is('.box_rotate_180')){
-      $(this).removeClass('box_rotate_180');
-      $(this).addClass('box_rotate_270');
-      // rotate sides
-      temp = $('#card4').data( 'left' );
-      $('#card4').data( 'left', $('#card4').data( 'bottom' ) );
-      $('#card4').data( 'bottom', $('#card4').data( 'right' ) );
-      $('#card4').data( 'right', $('#card4').data( 'top' ) );
-      $('#card4').data( 'top', temp );
-    }
-    else if($(this).is('.box_rotate_270')){
-      $(this).removeClass('box_rotate_270');
-      $('#card4').data( 'top', -1 );
-      $('#card4').data( 'right', 1 );
-      $('#card4').data( 'bottom', -1 );
-      $('#card4').data( 'left', 1 );
-    }  
-    else{
-      $(this).addClass('box_rotate_90');
-      temp = $('#card4').data( 'left' );
-      $('#card4').data( 'left', $('#card4').data( 'bottom' ) );
-      $('#card4').data( 'bottom', $('#card4').data( 'right' ) );
-      $('#card4').data( 'right', $('#card4').data( 'top' ) );
-      $('#card4').data( 'top', temp ); 
-    }  
-  }
-});
-
-$('#card5').click(function(){
-  if($('#card5').data('click') == true){
-    if($(this).is('.box_rotate_90')){
-      $(this).removeClass('box_rotate_90');
-      $(this).addClass('box_rotate_180');
-      // rotate sides
-      temp = $('#card5').data( 'left' );
-      $('#card5').data( 'left', $('#card5').data( 'bottom' ) );
-      $('#card5').data( 'bottom', $('#card5').data( 'right' ) );
-      $('#card5').data( 'right', $('#card5').data( 'top' ) );
-      $('#card5').data( 'top', temp );
-    }
-    else if($(this).is('.box_rotate_180')){
-      $(this).removeClass('box_rotate_180');
-      $(this).addClass('box_rotate_270');
-      // rotate sides
-      temp = $('#card5').data( 'left' );
-      $('#card5').data( 'left', $('#card5').data( 'bottom' ) );
-      $('#card5').data( 'bottom', $('#card5').data( 'right' ) );
-      $('#card5').data( 'right', $('#card5').data( 'top' ) );
-      $('#card5').data( 'top', temp );
-    }
-    else if($(this).is('.box_rotate_270')){
-      $(this).removeClass('box_rotate_270');
-      $('#card5').data( 'top', 1 );
-      $('#card5').data( 'right', 1 );
-      $('#card5').data( 'bottom', 1 );
-      $('#card5').data( 'left', 1 );
-    }  
-    else{
-      $(this).addClass('box_rotate_90');
-      temp = $('#card5').data( 'left' );
-      $('#card5').data( 'left', $('#card5').data( 'bottom' ) );
-      $('#card5').data( 'bottom', $('#card5').data( 'right' ) );
-      $('#card5').data( 'right', $('#card5').data( 'top' ) );
-      $('#card5').data( 'top', temp );
-    }  
-  }
-});
-
-$('#card6').click(function(){
-  if($('#card6').data('click') == true){
-    if($(this).is('.box_rotate_90')){
-      $(this).removeClass('box_rotate_90');
-      $(this).addClass('box_rotate_180');
-      // rotate sides
-      temp = $('#card6').data( 'left' );
-      $('#card6').data( 'left', $('#card6').data( 'bottom' ) );
-      $('#card6').data( 'bottom', $('#card6').data( 'right' ) );
-      $('#card6').data( 'right', $('#card6').data( 'top' ) );
-      $('#card6').data( 'top', temp );
-    }
-    else if($(this).is('.box_rotate_180')){
-      $(this).removeClass('box_rotate_180');
-      $(this).addClass('box_rotate_270');
-      // rotate sides
-      temp = $('#card6').data( 'left' );
-      $('#card6').data( 'left', $('#card6').data( 'bottom' ) );
-      $('#card6').data( 'bottom', $('#card6').data( 'right' ) );
-      $('#card6').data( 'right', $('#card6').data( 'top' ) );
-      $('#card6').data( 'top', temp );
-    }
-    else if($(this).is('.box_rotate_270')){
-      $(this).removeClass('box_rotate_270');
-      $('#card6').data( 'top', -1 );
-      $('#card6').data( 'right', -1 );
-      $('#card6').data( 'bottom', -1 );
-      $('#card6').data( 'left', -1 );
-    }  
-    else{
-      $(this).addClass('box_rotate_90');
-      temp = $('#card6').data( 'left' );
-      $('#card6').data( 'left', $('#card6').data( 'bottom' ) );
-      $('#card6').data( 'bottom', $('#card6').data( 'right' ) );
-      $('#card6').data( 'right', $('#card6').data( 'top' ) );
-      $('#card6').data( 'top', temp );
-      console.log($('#card6').data( 'left'));
-    }  
-  }  
-});
+function rotateValues ( id ) {
+  temp = $(id).data( 'left' );
+  $(id).data( 'left', $(id).data( 'bottom' ) );
+  $(id).data( 'bottom', $(id).data( 'right' ) );
+  $(id).data( 'right', $(id).data( 'top' ) );
+  $(id).data( 'top', temp );
 }
 
 // Piece Drop Function
 function handleTileDrop( event, ui ) {
-  var pieceSize = 117, counter = 0, result = 0, sideResult = 0;
 
-  // Set position of piece
+  var counter = 0, result = 0, sideResult = 0;
+  var reject = false;
+
+  // Set position of piece in droppable
   ui.draggable.position( { of: $(this), my: 'left top', at: 'left top' } );
-  
-  // Position of Newly placed Piece
   var newPiece = ui.draggable;
   var offset = newPiece.position();
   var xPos = offset.left;
   var yPos = offset.top;
   var id = newPiece.attr('id');
+  var setting = $(this).attr('id');
   
-  
+  // Already dragged peices are reset so they can be dragged again
   for (var j = 0; j <= 6; j++) {
-    // If a piece previously placed on the board is being dragged, reset it as a newPiece
     if(listOfPieces[j] == newPiece){
       listOfPieces[j] = undefined;
     }
-  }  
+  }
 
-  // Check all pieces if adjacent if the peice is dropped onto the playing board
-  if($(this).attr('id') == undefined){
-    for (var j = 0; j <= 6; j++) {
-
-      // Only check piece if it's a piece
-      if(typeof listOfPieces[j] === 'object'){
-
-        // Check piece to the right
+  // Check if adjecent peices are matches. Droppables on the board are undefined.
+  if(setting == undefined){
+    reject = false;
+    for (var j = 0; j <= 6; j++) {      
+      // Only array elements if it's a piece 
+      if(listOfPieces[j] != undefined){
+        // Check piece right
         if((listOfPieces[j].xPos == xPos + pieceSize) && (listOfPieces[j].yPos == yPos)){
           sideResult = newPiece.data( 'right' ) + listOfPieces[j].data( 'left' );
-          result += sideResult;
-          console.log('right' + newPiece.data( 'right' ));
-          console.log('left' + listOfPieces[j].data( 'left' ));
+          if(sideResult != 0){
+            reject = true;
+          }  
+          console.log(' right: ' + newPiece.data( 'right' ) + (' left: ') + listOfPieces[j].data( 'left' ));
         }
-
-        // Check piece to the bottom
+        // Check piece bottom
         if((listOfPieces[j].xPos == xPos) && (listOfPieces[j].yPos == yPos - pieceSize)){
           sideResult = newPiece.data( 'top' ) + listOfPieces[j].data( 'bottom' );
-          result += sideResult;
-          console.log('top' + newPiece.data( 'top' ));
-          console.log('bottom' + listOfPieces[j].data( 'bottom' ));
+          if(sideResult != 0){
+            reject = true;
+          }
+          console.log(' top: ' + newPiece.data( 'top' ) + (' bottom: ') + listOfPieces[j].data( 'bottom' ));
         }
-
-        // Check piece to the left
+        // Check piece left
         if((listOfPieces[j].xPos == xPos - pieceSize) && (listOfPieces[j].yPos == yPos)){
           sideResult = newPiece.data( 'left' ) + listOfPieces[j].data( 'right' );
-          result += sideResult;
-          console.log('left' + newPiece.data( 'left' ));
-          console.log('right' + listOfPieces[j].data( 'right' ));
+          if(sideResult != 0){
+            reject = true;
+          }
+          console.log(' left: ' + newPiece.data( 'left' ) + (' right: ') + listOfPieces[j].data( 'right' ));
         }
-
-        // Check piece to the top
+        // Check piece top
         if((listOfPieces[j].xPos == xPos) && (listOfPieces[j].yPos == yPos + pieceSize)){
           sideResult = newPiece.data( 'bottom' ) + listOfPieces[j].data( 'top' );
-          result += sideResult;
-          console.log('bottom' + newPiece.data( 'bottom' ));
-          console.log('top' + listOfPieces[j].data( 'top' ));
+          if(sideResult != 0){
+            reject = true;
+          }
+          console.log(' bottom: ' + newPiece.data( 'bottom' ) + (' top: ') + listOfPieces[j].data( 'top' ));
         }
       }
     }
   }
-  // Assign result -1 if the peice is being dragged into the queue.
+  // Assign result -10 if the peice is being dragged not being dragged into the playing board
   else {
-    result = -1;
+    reject = 'q';
   }      
-  
-  if(result == 0){
+  // Drop peice onto board
+  if(!reject){
     newPiece.position( { of: $(this), my: 'left top', at: 'left top' } );
     ui.draggable.draggable( 'option', 'revert', 'invalid' );
-    //ui.draggable.draggable( 'disable' );
     $('#' + id).data('click', false);
     // Adds the new piece to the list of all dropped
-    listOfPieces[i] = newPiece;
-    listOfPieces[i].xPos = xPos;
-    listOfPieces[i].yPos = yPos;
-    i++;
+    newPiece.xPos = xPos;
+    newPiece.yPos = yPos;
+    newPiece.queue = false;
+    for (var j = 0; j <= 6; j++) {
+      if(listOfPieces[j] == undefined){
+        listOfPieces[j] = newPiece;
+        break;
+      }
+    } 
   }
-  else if(result == -1){
+  // Drop peice onto queue
+  else if(reject == 'q'){
     $('#' + id).data('click', true);
+    ui.draggable.draggable( 'option', 'revert', false );
+    for (var j = 0; j <= 6; j++) {
+      if(listOfPieces[j] == ui.draggable){
+        listOfPieces[j] = undefined;
+      }
+    } 
   }
+  // Revert to last position 
   else{
     ui.draggable.draggable( 'enable' );
     $(this).droppable( 'enable' );
     ui.draggable.draggable( 'option', 'revert', true );
   }
+  saveBoard();
 }
-
-function replaceDraggable(event, ui){
-  
+// Try printing the whole array of pieces to see if they are stored correctly!
+function saveBoard (event, ui) {
+  var k = 0;
+  while(listOfPieces[k] != undefined){
+    savedList[k] = listOfPieces[k];
+    k++;
+  }
 }
