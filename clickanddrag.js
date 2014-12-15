@@ -1,5 +1,16 @@
 var correctPieces = 0;
 var listOfPieces = [undefined, undefined, undefined, undefined, undefined, undefined];
+
+/*
+TEST PIECE
+var piece = $('#card1').appendTo( '#tilePile' ).draggable( {
+        containment: '#content',
+        stack: '#tilePile div',
+        cursor: 'move',
+        revert: 'invalid'
+      } );
+piece.settingId = '#slot1';*/
+
 var savedList = [undefined, undefined, undefined, undefined, undefined, undefined];
 
 var topValues = [-1, -1, 1, -1, 1, -1];
@@ -11,17 +22,9 @@ var sides = [ 'top', 'right', 'bottom', 'left'];
 var numbers = [ 1, 2, 3, 4, 5, 6 ];
 var i = 0;
 var temp;
-var pieceSize = 117;
+var pieceSize = 1;
+var slotRows = 2;
 $( init );
-
-function onload(){
-  if(savedList[0] != undefined){
-
-  }
-  else {
-    init();
-  }
-}
 
 
 function init() {
@@ -33,25 +36,38 @@ function init() {
         drop: handleTileDrop,
     } );
   }
-  // Create the pile of tiles
-  for ( var i=0; i<6; i++ ) {
-    $('<div>' + numbers[i] + '</div>').data( 'number', numbers[i] ).attr( 'id', 'card'+numbers[i] ).appendTo( '#tilePile' ).draggable( {
-      containment: '#content',
-      stack: '#tilePile div',
-      cursor: 'move',
-      revert: 'invalid'
-    } );
-  }
 
   // Create the card slots
-  var words = [ 'one', 'two', 'three', 'four', 'five', 'six' ];
+  var x = 0;
+  var y = 0;
   for ( var i=1; i<=6; i++ ) {
-    $('<div>' + words[i-1] + '</div>').data( 'number', i ).appendTo( '#tileSlots' ).droppable( {
+    $('<div>' + 'slot' + [i] + '</div>').data( 'number', i ).attr( 'id', 'slot'+[i] ).appendTo( '#tileSlots' ).droppable( {
       accept: '#tilePile div',
       hoverClass: 'hovered',
       drop: handleTileDrop,
-    } );
-    
+    } ); 
+    if(x > slotRows){
+      x = 0;
+      y++;
+    }
+    $('#slot' + [i]).data( 'y', y);
+    $('#slot' + [i]).data( 'x', x);
+    x++;
+  }
+
+  // Create the pile of tiles
+  for ( var i=0; i<6; i++ ) {
+    if(savedList[i] != undefined){
+      savedList[i].position( { of: $(savedList[i].settingId), my: 'left top', at: 'left top' } );
+    }  
+    else {
+      $('<div>' + numbers[i] + '</div>').data( 'number', numbers[i] ).attr( 'id', 'card'+numbers[i] ).appendTo( '#tilePile' ).draggable( {
+        containment: '#content',
+        stack: '#tilePile div',
+        cursor: 'move',
+        revert: 'invalid'
+      } );
+    }
   }
 
   // Creates droppable elements for each draggable to prevent stacking pieces
@@ -67,6 +83,7 @@ function init() {
 
   // Adds side values to all pieces 
   for ( var j = 0; j<6; j++ ) {
+    $('#card' + numbers[j]).data('ori', 0);
     $('#card' + numbers[j]).data('click', true);
     $('#card' + numbers[j]).data('top', topValues[j]);
     $('#card' + numbers[j]).data('right', rightValues[j]);  
@@ -82,11 +99,13 @@ function init() {
         $(id).removeClass('box_rotate_90');
         $(id).addClass('box_rotate_180');
         rotateValues(id);
+        $(id).data('ori', 2);
       }
       else if($(id).is('.box_rotate_180')){
         $(id).removeClass('box_rotate_180');
         $(id).addClass('box_rotate_270');
         rotateValues(id);
+        $(id).data('ori', 3);
       }
       else if($(id).is('.box_rotate_270')){
         $(id).removeClass('box_rotate_270');
@@ -96,12 +115,15 @@ function init() {
         $('#card' + num[1]).data('right', rightValues[(num[1] - 1)]);  
         $('#card' + num[1]).data('bottom', bottomValues[(num[1] - 1)]);
         $('#card' + num[1]).data('left', leftValues[(num[1] - 1)]);
+        $(id).data('ori', 0);
       }  
       else{
         $(id).addClass('box_rotate_90');
         rotateValues(id);
+        $(id).data('ori', 1);
       } 
     }
+    //console.log($(id).data('ori'));
   });
 }
 
@@ -120,14 +142,21 @@ function handleTileDrop( event, ui ) {
   var reject = false;
 
   // Set position of piece in droppable
+  console.log(this);
   ui.draggable.position( { of: $(this), my: 'left top', at: 'left top' } );
   var newPiece = ui.draggable;
   var offset = newPiece.position();
-  var xPos = offset.left;
-  var yPos = offset.top;
+  var xPos = $(this).data('x');
+  var yPos = $(this).data('y');
   var id = newPiece.attr('id');
-  var setting = $(this).attr('id');
-  
+  var settingId = '#' + $(this).attr('id'); 
+  var settingNum = $(this).attr('id').split('t');
+
+  //console.log($(this).data('x'));
+  //console.log($(this).data('y'));
+
+  //console.log(settingId.data('y'));
+
   // Already dragged peices are reset so they can be dragged again
   for (var j = 0; j <= 6; j++) {
     if(listOfPieces[j] == newPiece){
@@ -136,7 +165,7 @@ function handleTileDrop( event, ui ) {
   }
 
   // Check if adjecent peices are matches. Droppables on the board are undefined.
-  if(setting == undefined){
+  if(settingNum[1] >= 1){
     reject = false;
     for (var j = 0; j <= 6; j++) {      
       // Only array elements if it's a piece 
@@ -186,9 +215,11 @@ function handleTileDrop( event, ui ) {
     ui.draggable.draggable( 'option', 'revert', 'invalid' );
     $('#' + id).data('click', false);
     // Adds the new piece to the list of all dropped
+    newPiece.id = id;
     newPiece.xPos = xPos;
     newPiece.yPos = yPos;
     newPiece.queue = false;
+    newPiece.settingId = settingId;
     for (var j = 0; j <= 6; j++) {
       if(listOfPieces[j] == undefined){
         listOfPieces[j] = newPiece;
@@ -205,6 +236,7 @@ function handleTileDrop( event, ui ) {
         listOfPieces[j] = undefined;
       }
     } 
+     ui.draggable.queue = true;
   }
   // Revert to last position 
   else{
