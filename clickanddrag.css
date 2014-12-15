@@ -12,7 +12,8 @@
 #tileSlots {
   width: 351px;
   height: 234px;
-  margin: 50px;
+  margin-top: 50px;
+  margin-left: 0px;
   background: #81EA81;
 }
  
